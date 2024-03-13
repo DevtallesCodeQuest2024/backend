@@ -5,7 +5,10 @@ import { initDatabase } from './database/db';
 
 const app = express();
 
-//Inicializar la base de datos
+//Swagger documentation
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../swagger.json';
+
 initDatabase();
 
 app.use(express.json());//Parsea el body
@@ -13,6 +16,7 @@ app.use(express.urlencoded({ extended: false})); //Parsea URL codificados del bo
 app.use(cors()); //Seguridad en peticiones
 
 app.use('/api/v1', require('./router/index'));
+app.use('/api/v1/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 import { handleErrorJoi } from "./middlewares/joi-validation-error";
 app.use( handleErrorJoi );

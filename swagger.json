@@ -1,0 +1,319 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Sorteos Devtalles API",
+    "description": "API de la aplicación de sorteos de Devtalles para la Code Contest 2024. Administra el ingreso e inicio de sesion únicamente de usuarios con el dominio \"@devtalles\", los cuales pueden generar sorteos. Usuarios invitados pueden unirse a los sorteos con su Id y Usuario de Discord.",
+    "contact": {
+      "name": "Xpang",
+      "email": "devtallescodecontest2024@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://sorteos-devtalles-06ee9219895b.herokuapp.com/api/v1",
+      "description": "Servidor en Heroku (Prod)"
+    },
+    {
+      "url": "http://localhost:4006/api/v1",
+      "description": "Servidor local (Dev)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "users",
+      "description": "Endpoint que maneja toda la información referente a los usuarios."
+    },
+    {
+      "name": "auth",
+      "description": "Endpoint para autenticar un dominio de correo específico."
+    },
+    {
+      "name": "lottery",
+      "description": "Endpoint que maneja toda la información referente a los sorteos."
+    }
+  ],
+  "paths": {
+    "/auth": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Recibe un correo para iniciar el pre-registro y retorna un link.",
+        "description": "Recibe el correo del usuario, verifica que pertenezca al dominio adecuado, genera un token y retorna un link a dicho correo para continuar el pre-registro.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/emailDomain"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Correo electrónico enviado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emailDomainExitoso"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "auth"
+        ],
+        "summary": "Recibe un token y retorna si es válido o no.",
+        "description": "Recibe el token del usuario generado al inicio del pre-registro (enviado por el usuario al dar click en el link) y después verifica su autenticidad.",
+        "responses": {
+          "200": {
+            "description": "Token verificado con éxito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emailDomainTokenExitoso"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "Registro de usuario nuevo. Token requerido para ADMIN.",
+        "description": "Permite a un usuario verificado en el pre-registro, terminar de registrarse con rol de administrador, por lo que es necesario el token de seguridad generado y validado durante el pre-registro.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/signupUser"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario registrado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/signupExitoso"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "(Unauthorized) No hay autorización para llamar el servicio"
+      },
+      "NotFound": {
+        "description": "(NotFound) No se encontró información"
+      },
+      "BadRequest": {
+        "description": "(BadRequest) Datos enviados incorrectos o hay datos obligatorios no enviados"
+      },
+      "ServerError": {
+        "description": "(ServerError) Error en el servidor"
+      }
+    },
+    "parameters": {
+      "token": {
+        "in": "header",
+        "name": "token",
+        "description": "Token de autenticación.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Id del usuario",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "emailDomain": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "john.doe@devtalles.com"
+          }
+        }
+      },
+      "emailDomainExitoso": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": false
+          },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Correo electrónico enviado con éxito."
+          }
+        }
+      },
+      "emailDomainTokenExitoso": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": false
+          },
+          "code": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Token verificado con éxito."
+          }
+        }
+      },
+      "signupUser": {
+        "type": "object",
+        "required": [
+          "password"
+        ],
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "unpasswordcualquiera"
+          }
+        }
+      },
+      "signupExitoso": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "example": false
+          },
+          "code": {
+            "type": "number",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "Usuario registrado con éxito"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "id",
+              "firstName",
+              "lastName",
+              "email",
+              "role"
+            ],
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "firstName": {
+                "type": "string",
+                "example": ""
+              },
+              "lastName": {
+                "type": "string",
+                "example": ""
+              },
+              "email": {
+                "type": "string",
+                "example": "john.doe@devtalles.com"
+              },
+              "role": {
+                "type": "string",
+                "example": "admin"
+              },
+              "isActive": {
+                "type": "boolean",
+                "example": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
