@@ -18,7 +18,7 @@ import { handleErrorJoi } from "./middlewares/joi-validation-error";
 app.use( handleErrorJoi );
 
 
-const PORT = process.env.SERVER_PORT || 4006;
+const PORT = process.env.PORT || 4006;
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 });
