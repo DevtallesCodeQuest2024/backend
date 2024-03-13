@@ -6,15 +6,15 @@ import {
 
 export const signup = async (req: Request, res: Response) => {
 
-    const userRegistered = signupService(req.body);
+    const userRegistered = await signupService(req.body, req);
 
     res
         .status(201)
         .json({
             error: false,
             code: 201,
-            message: 'Usuario registrado',
-            data: userRegistered
+            message: 'Usuario registrado con éxito',
+            data: userRegistered.publicData()
         });
 }
 

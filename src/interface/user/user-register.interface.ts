@@ -1,7 +1,15 @@
+import { Role } from "../../model/user/role.enum";
+
 export interface IUserRegister {
+    password: string;
+}
+
+export interface UserModelAttributes {
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
-    role: string;
+    hash: string;
+    salt: string;
+    role: Role;
+    isActive: boolean;
 }
