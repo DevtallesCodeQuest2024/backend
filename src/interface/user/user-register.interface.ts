@@ -5,3 +5,8 @@ export interface IUserRegister {
     password: string;
     role: string;
 }
+
+export interface IUserLogin {
+    email: string;
+    password: string;
+}

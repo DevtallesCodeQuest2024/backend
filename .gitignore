@@ -123,6 +123,7 @@ dist
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
+.vscode/
 .vscode-test
 
 # yarn v2
@@ -194,3 +195,8 @@ crashlytics-build.properties
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+
+#DB test
+docker-compose.yml
+mysql-test/
+init.sql
