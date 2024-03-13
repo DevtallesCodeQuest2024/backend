@@ -1,5 +1,6 @@
 import { sign, verify } from 'jsonwebtoken';
 import { Request } from 'express';
+import {DecodedType} from "../interface/types/decode.type";
 
 const JWT_SECRET: string = process.env.JWT_SECRET || 's$3Cr37s$';
 
@@ -40,5 +41,11 @@ export class Jwt {
 
         //Si no existe
         return null; //Se retorna valor nulo
+    }
+
+    static async getEmailFromToken(req: Request) {
+        const token = this.getTokenFromHeaders(req)
+        const decoded: DecodedType | null = await Jwt.validateToken(token!);
+        return decoded!.email;
     }
 }

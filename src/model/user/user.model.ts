@@ -1,9 +1,34 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../database/connection';
 import { Role } from "./role.enum";
+import { pbkdf2Sync, randomBytes } from "crypto";
 
 export class UserModel extends Model {
 
+    public id!: number;
+    public firstName!: string;
+    public lastName!: string;
+    public email!: string;
+    public hash!: string;
+    public salt!: string;
+    public role!: Role;
+    public isActive!: boolean;
+
+    createPassword(password: string) {
+        this.salt = randomBytes(16).toString('hex');
+        this.hash = pbkdf2Sync(password, this.salt, 2000, 254, 'sha512').toString('hex');
+    };
+
+    publicData() {
+        return {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            role: this.role,
+            isActive: this.isActive
+        };
+    }
 }
 
 UserModel.init({

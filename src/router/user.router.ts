@@ -8,8 +8,18 @@ import {
 
 import { createUserSchema } from '../validations/user-validation';
 import { validator } from '../middlewares/joi-validator.middleware';
+import { tokenNotFoundException, tokenNotValidException } from "../middlewares/exceptions/auth.exception";
+import { userAlreadyExistsException } from '../middlewares/exceptions/user.exception';
 
-router.post('/', validator.body( createUserSchema ), signup);
+router.post(
+    '/',
+    tokenNotFoundException,
+    tokenNotValidException,
+    validator.body( createUserSchema ),
+    userAlreadyExistsException,
+    signup
+);
+
 router.get('/', findAll);
 
 module.exports = router;

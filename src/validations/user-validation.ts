@@ -3,7 +3,7 @@ import { Role } from "../model/user/role.enum";
 import Joi from 'joi';
 
 const objectCreateUser = {
-    firstName:
+    /*firstName:
         Joi.string()
             .empty()
             .min(2)
@@ -37,7 +37,7 @@ const objectCreateUser = {
                     'string.email': 'El email debe ser un email válido',
                     'any.required': 'El email es un campo requerido'
                 }
-            ),
+            ),*/
     password:
         Joi.string()
             .empty()
@@ -55,14 +55,14 @@ const objectCreateUser = {
         .valid(Joi.ref('password'))
         .messages({
             'any.only': 'Las contraseñas no coinciden', // Mensaje personalizado para contraseñas que no coinciden
-        }),*/
+        }),
     role:
         Joi.string()
             .valid(Role.ADMIN, Role.GUEST)
             .messages({
                 'string.base': 'El rol debe ser una cadena de texto',
                 'any.only': 'El rol debe ser un valor valido',
-            })
+            })*/
 };
 
 export const createUserSchema = Joi.object(objectCreateUser).options({
