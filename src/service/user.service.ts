@@ -50,18 +50,10 @@ export const login = async (body: IUserLogin) => {
 
     const user = await getUserByEmail(email);
 
-    if (!user) {
-        throw new Error('Usuario o contraseña incorrectos');
-    }
-
-    if (!user.validatePassword(password) || !user.isActive) {
-        throw new Error('Usuario o contraseña incorrectos');
-    }
-
     // 2 hours token
     const token = await Jwt.generateToken({ email }, '2h');
 
-    const { hash, salt, id, ...data } = user.get();
+    const { hash, salt, id, ...data } = user!.get();
 
     return {
         data,

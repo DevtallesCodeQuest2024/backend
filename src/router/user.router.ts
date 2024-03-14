@@ -10,7 +10,7 @@ import {
 import { createUserSchema, loginUserSchema } from '../validations/user-validation';
 import { validator } from '../middlewares/joi-validator.middleware';
 import { tokenNotFoundException, tokenNotValidException } from "../middlewares/exceptions/auth.exception";
-import { userAlreadyExistsException } from '../middlewares/exceptions/user.exception';
+import { userAlreadyExistsException, userOrPassWrongException } from '../middlewares/exceptions/user.exception';
 
 router.post(
     '/',
@@ -22,7 +22,7 @@ router.post(
 );
 
 router.post('/', validator.body( createUserSchema ), signup);
-router.post('/login', validator.body( loginUserSchema ), login);
 router.get('/', findAll);
+router.post('/login', validator.body( loginUserSchema ), userOrPassWrongException, login);
 
 module.exports = router;

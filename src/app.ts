@@ -21,8 +21,8 @@ app.use('/api/v1/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocumen
 import { handleErrorJoi } from "./middlewares/joi-validation-error";
 app.use( handleErrorJoi );
 
-import { unknownError } from "./middlewares/exceptions/general.exception";
-app.use( unknownError );
+import { unknownException } from "./middlewares/exceptions/unknownException";
+app.use( unknownException );
 
 
 const PORT = process.env.PORT || 4006;
