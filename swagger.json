@@ -158,6 +158,98 @@
           }
         }
       }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Inicia sesión de un usuario existente.",
+        "description": "Verifica las credenciales del usuario y devuelve un token de acceso si son válidas.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Correo electrónico del usuario.",
+                    "example": "user@devtalles.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Contraseña del usuario.",
+                    "example": "secretpassword"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Inicio de sesión exitoso. Retorna datos del usuario y token de acceso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "code": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Usuario logueado"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "firstName": {
+                          "type": "string",
+                          "example": "Test"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "example": "Admin"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "test@test.com"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "Token de acceso JWT para autenticación en futuras peticiones.",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpYXQiOjE3MTAzOTk5MDEsImV4cCI6MTcxMDQwNzEwMX0.DU1UUdnGaDr4ciluOzDDs--ek6RMWPfNddQWeazL1AM"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

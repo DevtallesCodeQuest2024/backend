@@ -19,6 +19,11 @@ export class UserModel extends Model {
         this.hash = pbkdf2Sync(password, this.salt, 2000, 254, 'sha512').toString('hex');
     };
 
+    validatePassword(password: string) {
+        const hash = pbkdf2Sync(password, this.salt, 2000, 254, 'sha512').toString('hex');
+        return this.hash === hash;
+    }
+
     publicData() {
         return {
             id: this.id,

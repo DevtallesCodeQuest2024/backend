@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 
-export const validateUser = async () => {
+export const validateDiscordUser = async () => {
     const client = new Client({
 
         intents: [

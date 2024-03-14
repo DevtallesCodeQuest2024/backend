@@ -16,8 +16,5 @@ export interface UserModelAttributes {
 
 export interface IUserLogin {
     email: string;
-    hash: string;
-    salt: string;
-    role: Role;
-    isActive: boolean;
+    password: string;
 }

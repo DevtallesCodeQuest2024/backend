@@ -19,16 +19,17 @@ export const signup = async (req: Request, res: Response) => {
         });
 }
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
 
-    const userLogged = loginService(req.body);
+    const userLogged = await loginService(req.body);
 
     res
         .status(200)
         .json({
             error: false,
             code: 200,
-            message: 'Usuario logueado'
+            ...userLogged,
+            message: 'Usuario logueado',
         });
 }
 
