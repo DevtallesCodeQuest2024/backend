@@ -13,3 +13,8 @@ export interface UserModelAttributes {
     role: Role;
     isActive: boolean;
 }
+
+export interface IUserLogin {
+    email: string;
+    password: string;
+}

@@ -1,8 +1,11 @@
 import { Request } from "express";
-import {IUserRegister, UserModelAttributes} from "../interface/user/user-register.interface";
 import { UserModel } from "../model/user/user.model";
 import { Jwt } from "../config/jwt";
 import {Role} from "../model/user/role.enum";
+import {
+  IUserLogin,
+  IUserRegister,
+} from '../interface/user/user-register.interface';
 
 export const signup = async (body: IUserRegister, req: Request) => {
 
@@ -38,4 +41,30 @@ export const getUserByEmail = function (email: string) {
             isActive: true
         }
     });
+};
+
+
+export const login = async (body: IUserLogin) => {  
+
+    const { email, password } = body;
+
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+        throw new Error('Usuario o contraseña incorrectos');
+    }
+
+    if (!user.validatePassword(password) || !user.isActive) {
+        throw new Error('Usuario o contraseña incorrectos');
+    }
+
+    // 2 hours token
+    const token = await Jwt.generateToken({ email }, '2h');
+
+    const { hash, salt, id, ...data } = user.get();
+
+    return {
+        data,
+        token,
+    }
 };
