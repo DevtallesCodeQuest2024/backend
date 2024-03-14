@@ -14,7 +14,7 @@ export const userAlreadyExistsException = async function (req: Request, res: Res
             .json({
                 error: true,
                 code: 400,
-                message: 'Ya existe un usuario registrado con ese email.',
+                message: ['Ya existe un usuario registrado con ese email.'],
                 data: null,
             });
     }
@@ -34,7 +34,7 @@ export const userNotFoundException = async function (req: Request, res: Response
             .json({
                 error: true,
                 code: 404,
-                message: 'Usuario no encontrado.',
+                message: ['Usuario no encontrado.'],
                 data: null
             });
     }
@@ -54,7 +54,7 @@ export const userOrPassWrongException = async function (req: Request, res: Respo
             .json({
                 error: true,
                 code: 401,
-                message: 'Usuario o contraseña incorrectos',
+                message: ['Usuario o contraseña incorrectos'],
                 data: null
             });
     }

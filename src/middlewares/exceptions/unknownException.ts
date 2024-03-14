@@ -15,7 +15,7 @@ export const unknownException = function (err: IError, req: Request, res: Respon
         .json({
             error: true,
             code: status,
-            message: message,
+            message: [message],
             data: err
         });
 
