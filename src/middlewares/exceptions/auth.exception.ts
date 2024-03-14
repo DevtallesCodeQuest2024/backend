@@ -12,7 +12,7 @@ export const emailDomainIsNotValidException = async function (req: Request, res:
         return res.status(400).json({
             error: true,
             code: 400,
-            message: 'Correo electrónico inválido'
+            message: ['Correo electrónico inválido']
         });
     }
 
@@ -27,7 +27,7 @@ export const tokenNotFoundException = async function (req: Request, res: Respons
         return res.status(400).json({
             error: true,
             code: 400,
-            message: 'Token no proporcionado'
+            message: ['Token no proporcionado']
         });
     }
 
@@ -55,7 +55,7 @@ export const tokenNotValidException = async function (req: Request, res: Respons
             `Token expirado. (${errorData.message})`     : 'JsonWebTokenError' ?
                 `Token invalido. (${errorData.message})` : `Token aun no esta activo. (${errorData.message})`;
 
-        return res.status(401).json({error: true, statusCode: 401, message });
+        return res.status(401).json({error: true, statusCode: 401, message: [message]});
     }
 
     next();
