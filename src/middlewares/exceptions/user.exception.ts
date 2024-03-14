@@ -41,3 +41,23 @@ export const userNotFoundException = async function (req: Request, res: Response
 
     next();
 }
+
+export const userOrPassWrongException = async function (req: Request, res: Response, next: NextFunction) {
+
+    const { email, password } = req.body;
+
+    const user = await getUserByEmail(email);
+
+    if (!user || !user.validatePassword(password) || !user.isActive) {
+        return res
+            .status(401)
+            .json({
+                error: true,
+                code: 401,
+                message: 'Usuario o contraseña incorrectos',
+                data: null
+            });
+    }
+
+    next();
+}
