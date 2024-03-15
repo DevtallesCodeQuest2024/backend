@@ -15,7 +15,9 @@ import {
     tokenNotValidException
 } from '../middlewares/exceptions/auth.exception';
 
-router.post('/', validator.body(createEmailAuthValidation), emailDomainIsNotValidException, receiveEmail);
+import {userAlreadyExistsException} from "../middlewares/exceptions/user.exception";
+
+router.post('/', validator.body(createEmailAuthValidation), emailDomainIsNotValidException, userAlreadyExistsException, receiveEmail);
 router.get('/', tokenNotFoundException, tokenNotValidException, verifyToken);
 
 module.exports = router;
