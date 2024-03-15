@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
 
 // Path http://my-app.com/users
 router.use('/users', require('./user.router'));
+router.use('/lotterys', require('./lottery.router'));
 router.use('/auth', require('./auth.router'));
 
 module.exports = router;
