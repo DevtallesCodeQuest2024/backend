@@ -22,7 +22,7 @@ export const sendEmailVerification = (email: string, token: string) => {
       from: email,
       to: email,
       subject: "Devtalles Sorteos - Verificación de correo electrónico.",
-      html: `<p>Haz clic en el siguiente <a href="${process.env.DOMAIN}/admin/registro/${token}">enlace</a> para verificar tu correo electrónico y completar tu registro</p>`
+      html: `<p>Haz clic en el siguiente <a href="${process.env.DOMAIN}/verificar?token=${token}">enlace</a> para verificar tu correo electrónico y completar tu registro</p>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
