@@ -34,16 +34,6 @@ export const signup = async (body: IUserRegister, req: Request) => {
     );
 }
 
-export const getUserByEmail = function (email: string) {
-    return UserModel.findOne({
-        where: {
-            email: email,
-            isActive: true
-        }
-    });
-};
-
-
 export const login = async (body: IUserLogin) => {  
 
     const { email, password } = body;
@@ -60,3 +50,14 @@ export const login = async (body: IUserLogin) => {
         token,
     }
 };
+
+export const getUserByEmail = function (email: string) {
+    return UserModel.findOne({
+        where: {
+            email: email,
+            isActive: true
+        }
+    });
+};
+
+
