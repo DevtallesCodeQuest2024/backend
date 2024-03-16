@@ -17,7 +17,8 @@ const getAllLotterys = async () => {
             "isActive"
           ]
         }
-      ]
+      ],
+      order: [["created_at", "DESC"]]
     });
   } catch (error) {
     throw error;
@@ -41,7 +42,8 @@ const getAllLotterysActive = async () => {
             "isActive"
           ]
         }
-      ]
+      ],
+      order: [["created_at", "DESC"]]
     });
   } catch (error) {
     throw error;
