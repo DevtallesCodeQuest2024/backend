@@ -1,8 +1,9 @@
 import { LotteryModel } from "../model/lottery/lottery.model";
+import { UserModel } from "../model/user/user.model";
 
 const getAllLotterys = async () => {
   try {
-    return await LotteryModel.findAll();
+    return await LotteryModel.findAll({ include: UserModel });
   } catch (error) {
     throw error;
   }
@@ -10,7 +11,7 @@ const getAllLotterys = async () => {
 
 const getAllLotterysActive = async () => {
   try {
-    return await LotteryModel.findAll({ where: { active: true } });
+    return await LotteryModel.findAll({ where: { active: true }, include: UserModel });
   } catch (error) {
     throw error;
   }
@@ -18,7 +19,7 @@ const getAllLotterysActive = async () => {
 
 const getLotteryById = async (id: number) => {
   try {
-    return await LotteryModel.findOne({ where: { id } });
+    return await LotteryModel.findOne({ where: { id }, include: UserModel });
   } catch (error) {
     throw error;
   }
