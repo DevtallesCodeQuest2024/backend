@@ -3,7 +3,22 @@ import { UserModel } from "../model/user/user.model";
 
 const getAllLotterys = async () => {
   try {
-    return await LotteryModel.findAll({ include: UserModel });
+    return await LotteryModel.findAll({
+      include: [
+        {
+          model: UserModel,
+          through: { attributes: [] },
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "email",
+            "role",
+            "isActive"
+          ]
+        }
+      ]
+    });
   } catch (error) {
     throw error;
   }
@@ -11,7 +26,23 @@ const getAllLotterys = async () => {
 
 const getAllLotterysActive = async () => {
   try {
-    return await LotteryModel.findAll({ where: { active: true }, include: UserModel });
+    return await LotteryModel.findAll({
+      where: { active: true },
+      include: [
+        {
+          model: UserModel,
+          through: { attributes: [] },
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "email",
+            "role",
+            "isActive"
+          ]
+        }
+      ]
+    });
   } catch (error) {
     throw error;
   }
@@ -19,7 +50,23 @@ const getAllLotterysActive = async () => {
 
 const getLotteryById = async (id: number) => {
   try {
-    return await LotteryModel.findOne({ where: { id }, include: UserModel });
+    return await LotteryModel.findOne({
+      where: { id },
+      include: [
+        {
+          model: UserModel,
+          through: { attributes: [] },
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "email",
+            "role",
+            "isActive"
+          ]
+        }
+      ]
+    });
   } catch (error) {
     throw error;
   }
