@@ -6,9 +6,8 @@ interface IError {
 }
 
 export const unknownException = function (err: IError, req: Request, res: Response, next: NextFunction ) {
-
     const status = err.statusCode ? err.statusCode : 500;
-    const message = err.message ? err.message : 'Hubo un error inesperado en el servidor.';
+    const message = 'Hubo un error inesperado en el servidor.'
 
     res
         .status(status)
@@ -16,8 +15,6 @@ export const unknownException = function (err: IError, req: Request, res: Respon
             error: true,
             code: status,
             message: [message],
-            data: err
         });
 
-    // next(err);
 };
