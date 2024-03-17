@@ -3,6 +3,7 @@ const router: Router = express.Router();
 
 import {
     receiveEmail,
+    discordAuth,
     verifyToken
 } from '../controller/auth.controller';
 
@@ -19,5 +20,7 @@ import  {emailUserAlreadyExistsException } from "../middlewares/exceptions/user.
 
 router.post('/', validator.body(createEmailAuthValidation), emailDomainIsNotValidException, emailUserAlreadyExistsException, receiveEmail);
 router.get('/', tokenNotFoundException, tokenNotValidException, verifyToken);
+router.get('/discord', discordAuth);
+
 
 module.exports = router;
