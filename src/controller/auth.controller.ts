@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { sendEmail } from '../service/auth.service';
+import { validateDiscordUser } from '../service/discord.service';
 import { Jwt } from '../config/jwt';
 
 export const receiveEmail = async (req: Request, res: Response) => {
@@ -35,9 +36,27 @@ export const verifyToken = async (req: Request, res: Response) => {
 };
 
 export const discordAuth = async (req: Request, res: Response) => {
+    
+    const {user, isPartOfGuild} = await validateDiscordUser(req);
+    
+
+    if (!isPartOfGuild) {
+        return res.status(403).send({
+            error: true,
+            code: 403,
+            message: 'El usuario no es miembro del servidor de Discord.'
+        });
+    }
+   
+
     res.status(200).send({
         error: false,
         code: 200,
         message: 'Autenticación de Discord realizada con éxito.',
+        data: {
+            user
+        }
+        
       });
+    // res.redirect('http://localhost:4200/sorteos');
 };
