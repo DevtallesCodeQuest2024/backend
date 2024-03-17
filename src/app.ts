@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { initDatabase } from "./database/db";
+import './config/passport-discord.config';
 
 const app = express();
 
