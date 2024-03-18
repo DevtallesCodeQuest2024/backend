@@ -16,6 +16,5 @@ router.get('/', (req, res) => {
 router.use('/users', require('./user.router'));
 router.use('/lotterys', require('./lottery.router'));
 router.use('/auth', require('./auth.router'));
-router.use('/participant', require('./participant.router'));
 
 module.exports = router;
