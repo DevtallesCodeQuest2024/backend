@@ -57,6 +57,10 @@ UserModel.init({
         unique: true,
         allowNull: false
     },
+    discordUsername: {
+        type: DataTypes.STRING,
+        field: 'discord_username',
+    },
     hash: {
         type: DataTypes.STRING(1234),
     },

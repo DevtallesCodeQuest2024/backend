@@ -1,8 +1,12 @@
 import "dotenv/config";
 import express from "express";
+import passport from "passport";
 import cors from "cors";
+
+const session = require("express-session");
+
 import { initDatabase } from "./database/db";
-import './config/passport-discord.config';
+import "./config/passport-discord.config";
 
 const app = express();
 
@@ -16,6 +20,16 @@ import "./database/associations";
 app.use(express.json()); //Parsea el body
 app.use(express.urlencoded({ extended: false })); //Parsea URL codificados del body
 app.use(cors()); //Seguridad en peticiones
+
+app.use(
+  session({
+    secret: "secreto",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/api/v1", require("./router/index"));
 app.use(

@@ -1,36 +1,40 @@
-import express, { Router } from 'express';
+import express, { Router } from "express";
+import passport from "passport";
 const router: Router = express.Router();
 
-import {
-    receiveEmail,
-    discordAuth,
-    verifyToken
-} from '../controller/auth.controller';
+import { receiveEmail, verifyToken } from "../controller/auth.controller";
 
-import { createEmailAuthValidation } from '../validations/email-auth-validation';
-import { validator } from '../middlewares/joi-validator.middleware';
+import { createEmailAuthValidation } from "../validations/email-auth-validation";
+import { validator } from "../middlewares/joi-validator.middleware";
 
 import {
+  emailDomainIsNotValidException,
+  tokenNotFoundException,
+  tokenNotValidException
+} from "../middlewares/exceptions/auth.exception";
+
+import { emailUserAlreadyExistsException } from "../middlewares/exceptions/user.exception";
+
+router
+  .route("/")
+  .get(tokenNotFoundException, tokenNotValidException, verifyToken)
+  .post(
+    validator.body(createEmailAuthValidation),
     emailDomainIsNotValidException,
-    tokenNotFoundException,
-    tokenNotValidException
-} from '../middlewares/exceptions/auth.exception';
+    emailUserAlreadyExistsException,
+    receiveEmail
+  );
 
-import  {emailUserAlreadyExistsException } from "../middlewares/exceptions/user.exception";
-import passport from "passport";
+router.get("/discord", passport.authenticate("discord"));
 
-router.post('/', validator.body(createEmailAuthValidation), emailDomainIsNotValidException, emailUserAlreadyExistsException, receiveEmail);
-router.get('/', tokenNotFoundException, tokenNotValidException, verifyToken);
-router.get('/discord', discordAuth);
+router.get(
+  "/discord/callback",
+  passport.authenticate("discord", { failureRedirect: "/" }),
+  (req, res) => {
+    console.log("Código de autorización recibido:", req.query.code);
 
-
-router.get('/discord/callback', passport.authenticate('discord', { failureRedirect: '/login' }), (req, res) => {
-
-    // Aquí puedes manejar el código de autorización, por ejemplo, intercambiándolo por tokens de acceso
-    console.log('Código de autorización recibido:', req.query.code);
-
-    res.redirect('/');
-});
-router.get('/discord', passport.authenticate('discord'));
+    res.redirect("http://localhost:4200/sorteos");
+  }
+);
 
 module.exports = router;
