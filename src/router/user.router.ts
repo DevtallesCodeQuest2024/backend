@@ -22,17 +22,17 @@ import {
   userOrPassWrongException
 } from "../middlewares/exceptions/user.exception";
 
-router.post(
-  "/",
-  tokenNotFoundException,
-  tokenNotValidException,
-  validator.body(createUserSchema),
-  userAlreadyExistsException,
-  signup
-);
+router
+  .route("/")
+  .post(
+    tokenNotFoundException,
+    tokenNotValidException,
+    validator.body(createUserSchema),
+    userAlreadyExistsException,
+    signup
+  )
+  .get(findAll);
 
-router.post("/", validator.body(createUserSchema), signup);
-router.get("/", findAll);
 router.post(
   "/login",
   validator.body(loginUserSchema),

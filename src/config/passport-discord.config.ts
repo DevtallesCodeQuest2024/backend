@@ -24,23 +24,29 @@ passport.use(
       const serverId = process.env.DISCORD_SERVER_ID;
       const isMember = guilds?.some((guild) => guild.id === serverId);
 
-      if (isMember) {
-        console.log("El usuario está en el servidor de Discord: ", profile);
+      console.log("Usuario profile: ", profile);
+      UserModel.findOne({ where: { discordId: profile.id } })
+        .then((user) => {
+          if (user) return user;
 
-        UserModel.create({
-          firstName: "",
-          lastName: "",
-          discordUsername: profile.username,
-          email: profile.email ?? "",
-          role: "guest",
-          isActive: true
+          if (!isMember) {
+            throw {
+              message: "El usuario no es miembro de la comunidad de devtalles",
+              discordUsername: profile.username
+            };
+          }
+          return UserModel.create({
+            firstName: "",
+            lastName: "",
+            discordUsername: profile.username,
+            discordId: profile.id,
+            email: profile.email ?? "",
+            role: "guest",
+            isActive: true
+          });
         })
-          .then((user) => done(null, user))
-          .catch((error) => done(error));
-      } else {
-        console.log("El usuario no está en el servidor de Discord.");
-        done(new Error("El usuario no está en el servidor de Discord"));
-      }
+        .then((user) => done(null, user))
+        .catch((error) => done(error));
     }
   )
 );

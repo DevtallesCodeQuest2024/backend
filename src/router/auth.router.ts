@@ -14,6 +14,7 @@ import {
 } from "../middlewares/exceptions/auth.exception";
 
 import { emailUserAlreadyExistsException } from "../middlewares/exceptions/user.exception";
+import { loginDiscord } from "../controller/user.controller";
 
 router
   .route("/")
@@ -29,12 +30,10 @@ router.get("/discord", passport.authenticate("discord"));
 
 router.get(
   "/discord/callback",
-  passport.authenticate("discord", { failureRedirect: "/" }),
-  (req, res) => {
-    console.log("Código de autorización recibido:", req.query.code);
-
-    res.redirect("http://localhost:4200/sorteos");
-  }
+  passport.authenticate("discord", {
+    failureRedirect: `${process.env.PATH_WEB}`
+  }),
+  loginDiscord
 );
 
 module.exports = router;

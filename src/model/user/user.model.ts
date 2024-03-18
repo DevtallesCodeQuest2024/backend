@@ -1,84 +1,96 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../../database/connection';
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../../database/connection";
 import { Role } from "./role.enum";
 import { pbkdf2Sync, randomBytes } from "crypto";
 
 export class UserModel extends Model {
+  public id!: number;
+  public firstName!: string;
+  public lastName!: string;
+  public discordUsername!: string;
+  public email!: string;
+  public hash!: string;
+  public salt!: string;
+  public role!: Role;
+  public isActive!: boolean;
 
-    public id!: number;
-    public firstName!: string;
-    public lastName!: string;
-    public email!: string;
-    public hash!: string;
-    public salt!: string;
-    public role!: Role;
-    public isActive!: boolean;
+  createPassword(password: string) {
+    this.salt = randomBytes(16).toString("hex");
+    this.hash = pbkdf2Sync(password, this.salt, 2000, 254, "sha512").toString(
+      "hex"
+    );
+  }
 
-    createPassword(password: string) {
-        this.salt = randomBytes(16).toString('hex');
-        this.hash = pbkdf2Sync(password, this.salt, 2000, 254, 'sha512').toString('hex');
+  validatePassword(password: string) {
+    const hash = pbkdf2Sync(password, this.salt, 2000, 254, "sha512").toString(
+      "hex"
+    );
+    return this.hash === hash;
+  }
+
+  publicData() {
+    return {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      role: this.role,
+      isActive: this.isActive,
+      discordUsername: this.discordUsername
     };
-
-    validatePassword(password: string) {
-        const hash = pbkdf2Sync(password, this.salt, 2000, 254, 'sha512').toString('hex');
-        return this.hash === hash;
-    }
-
-    publicData() {
-        return {
-            id: this.id,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            role: this.role,
-            isActive: this.isActive
-        };
-    }
+  }
 }
 
-UserModel.init({
+UserModel.init(
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
     firstName: {
-        type: DataTypes.STRING,
-        field: 'first_name',
-        allowNull: false
+      type: DataTypes.STRING,
+      field: "first_name",
+      allowNull: false
     },
-    lastName:  {
-        type: DataTypes.STRING,
-        field: 'last_name',
-        allowNull: false
+    lastName: {
+      type: DataTypes.STRING,
+      field: "last_name",
+      allowNull: false
     },
     email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false
     },
     discordUsername: {
-        type: DataTypes.STRING,
-        field: 'discord_username',
+      type: DataTypes.STRING,
+      field: "discord_username"
+    },
+    discordId: {
+      type: DataTypes.STRING,
+      field: "discord_id"
     },
     hash: {
-        type: DataTypes.STRING(1234),
+      type: DataTypes.STRING(1234)
     },
     salt: {
-        type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     role: {
-        type: DataTypes.ENUM,
-        values: Object.values(Role),
-        allowNull: false
+      type: DataTypes.ENUM,
+      values: Object.values(Role),
+      allowNull: false
     },
     isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        field: 'is_active'
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      field: "is_active"
     }
-}, {
+  },
+  {
     sequelize,
-    modelName: 'users',
+    modelName: "users",
     timestamps: false
-});
+  }
+);

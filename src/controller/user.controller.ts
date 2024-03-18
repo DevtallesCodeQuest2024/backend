@@ -6,6 +6,7 @@ import {
   getUserByEmail
 } from "../service/user.service";
 import { Jwt } from "../config/jwt";
+import { UserModel } from "../model/user/user.model";
 
 export const signup = async (req: Request, res: Response) => {
   const userRegistered = await signupService(req.body, req);
@@ -29,10 +30,19 @@ export const login = async (req: Request, res: Response) => {
   });
 };
 
+export const loginDiscord = async (req: Request, res: Response) => {
+  const user = (req.user as UserModel).toJSON();
+  const { email } = user;
+
+  const token = await Jwt.generateToken({ email }, "2h");
+
+  res.redirect(`${process.env.PATH_WEB}/discord/registro?token=${token}`);
+};
+
 export const getUserByToken = async (req: Request, res: Response) => {
   const email = await Jwt.getEmailFromToken(req);
   const user = await getUserByEmail(email);
-  const token = await Jwt.generateToken({ email }, '900s');
+  const token = await Jwt.generateToken({ email }, "900s");
 
   res.status(200).json({
     error: false,
