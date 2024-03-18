@@ -3,6 +3,7 @@ const router: Router = express.Router();
 
 import {
     receiveEmail,
+    discordAuth,
     verifyToken
 } from '../controller/auth.controller';
 
@@ -20,6 +21,8 @@ import passport from "passport";
 
 router.post('/', validator.body(createEmailAuthValidation), emailDomainIsNotValidException, emailUserAlreadyExistsException, receiveEmail);
 router.get('/', tokenNotFoundException, tokenNotValidException, verifyToken);
+router.get('/discord', discordAuth);
+
 
 router.get('/discord/callback', passport.authenticate('discord', { failureRedirect: '/login' }), (req, res) => {
 

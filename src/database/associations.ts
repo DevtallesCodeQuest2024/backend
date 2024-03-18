@@ -9,6 +9,7 @@ LotteryModel.belongsToMany(UserModel, {
   onDelete: "RESTRICT",
   onUpdate: "RESTRICT",
 });
+
 UserModel.belongsToMany(LotteryModel, {
   through: "user_lotterys",
   foreignKey: "user_id",
