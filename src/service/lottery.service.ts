@@ -1,3 +1,5 @@
+import { QueryTypes } from "sequelize";
+import { sequelize } from "../database/connection";
 import { LotteryModel } from "../model/lottery/lottery.model";
 import { UserModel } from "../model/user/user.model";
 
@@ -7,11 +9,11 @@ const getAllLotterys = async () => {
       include: [
         {
           model: UserModel,
-          through: { attributes: [] },
           attributes: [
             "id",
             "firstName",
             "lastName",
+            "discordUsername",
             "email",
             "role",
             "isActive"
@@ -32,11 +34,11 @@ const getAllLotterysActive = async () => {
       include: [
         {
           model: UserModel,
-          through: { attributes: [] },
           attributes: [
             "id",
             "firstName",
             "lastName",
+            "discordUsername",
             "email",
             "role",
             "isActive"
@@ -57,11 +59,11 @@ const getLotteryById = async (id: number) => {
       include: [
         {
           model: UserModel,
-          through: { attributes: [] },
           attributes: [
             "id",
             "firstName",
             "lastName",
+            "discordUsername",
             "email",
             "role",
             "isActive"
@@ -99,11 +101,46 @@ const deleteLottery = async (id: number) => {
   }
 };
 
+const joinLottery = async (userId: number, lotteryId: number) => {
+  try {
+    const newData = {
+      lottery_id: lotteryId,
+      user_id: userId
+    };
+
+    await sequelize.query(
+      `INSERT INTO user_lotterys (lottery_id, user_id, created_at, updated_at) VALUES (:lottery_id, :user_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+      { replacements: newData, type: QueryTypes.INSERT }
+    );
+
+    return await LotteryModel.findOne({
+      where: { id: lotteryId },
+      include: [
+        {
+          model: UserModel,
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "discordUsername",
+            "email",
+            "role",
+            "isActive"
+          ]
+        }
+      ]
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export default {
   getAllLotterys,
   getAllLotterysActive,
   getLotteryById,
   createLottery,
   updateLottery,
-  deleteLottery
+  deleteLottery,
+  joinLottery
 };

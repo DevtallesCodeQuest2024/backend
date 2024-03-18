@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import lotteryService from "../service/lottery.service";
+import { Jwt } from "../config/jwt";
+import { getUserByEmail } from "../service/user.service";
 
 const getAllLotterys = async (
   req: Request,
@@ -126,11 +128,33 @@ const deleteLottery = async (
   }
 };
 
+// join Lottery *******************************
+
+const joinLottery = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const email = await Jwt.getEmailFromToken(req);
+    const user = await getUserByEmail(email);
+    const lotteryId = req.body.lotteryId;
+    
+    const lottery = await lotteryService.joinLottery(user!.id, lotteryId);
+
+    res.status(200).json({
+      error: false,
+      code: 200,
+      message: "Te has unido exitosamente a este sorteo!",
+      data: lottery
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   getAllLotterys,
   getAllLotterysActive,
   getLotteryById,
   createLottery,
   updateLottery,
-  deleteLottery
+  deleteLottery,
+  joinLottery
 };

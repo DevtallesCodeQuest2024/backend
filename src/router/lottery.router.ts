@@ -7,7 +7,11 @@ import {
   tokenNotValidException
 } from "../middlewares/exceptions/auth.exception";
 import { validator } from "../middlewares/joi-validator.middleware";
-import { createLotterySchema, updateLotterySchema, deleteLotterySchema } from "../validations/lottery-validation";
+import {
+  createLotterySchema,
+  updateLotterySchema,
+  deleteLotterySchema
+} from "../validations/lottery-validation";
 import { authorizedRoleException } from "../middlewares/exceptions/role.exception";
 
 const router: Router = express.Router();
@@ -43,6 +47,8 @@ router
   );
 
 router.route("/public").get(lotteryController.getAllLotterysActive);
+
+router.route("/join").post(lotteryController.joinLottery);
 
 router.route("/:id").get(lotteryController.getLotteryById);
 
