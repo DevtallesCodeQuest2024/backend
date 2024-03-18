@@ -38,10 +38,10 @@ $ npm run start
 ```
 
 ## Demo
-- _Coming soon_
+[Back en Heroku](https://sorteos-devtalles-06ee9219895b.herokuapp.com/api/v1/documentation/)
 
 ## Frontend
-- _Coming soon_
+[Front en Github Pages](https://devtallescodequest2024.github.io/frontend/inicio)
 
 ## Authors
 
